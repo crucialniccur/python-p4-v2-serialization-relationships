@@ -24,6 +24,8 @@ class Zookeeper(db.Model, SerializerMixin):
     name = db.Column(db.String, unique=True)
     birthday = db.Column(db.Date)
 
+    serialize_rules = ('-animals.zookeeper',)
+
     animals = db.relationship('Animal', back_populates='zookeeper')
 
 
@@ -33,6 +35,8 @@ class Enclosure(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     environment = db.Column(db.String)
     open_to_visitors = db.Column(db.Boolean)
+
+    serialize_rules = ('-animals.enclosure',)
 
     animals = db.relationship('Animal', back_populates='enclosure')
 
@@ -49,6 +53,8 @@ class Animal(db.Model, SerializerMixin):
 
     enclosure = db.relationship('Enclosure', back_populates='animals')
     zookeeper = db.relationship('Zookeeper', back_populates='animals')
+
+    serialize_rules = ('-zookeeper.animals', '-enclosure.animals',)
 
     def __repr__(self):
         return f'<Animal {self.name}, a {self.species}>'
